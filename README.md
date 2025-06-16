@@ -15,7 +15,8 @@ Den er designet til at være enkel at bruge og sikker at implementere — uden a
 - Sende begge dele
 - Eller undlade notifikationer (du vælger)
 
-✅ (Valgfrit) Logic App kan også opsættes til at genoptage (resume) kapaciteten på et andet tidspunkt
+✅ (Valgfrit) Logic App kan også opsættes til at genoptage (resume) kapaciteten på et andet tidspunkt  
+✅ **Precheck Logic App** hjælper dig med at validere, at din Azure opsætning er klar til auto-pause
 
 ---
 
@@ -34,13 +35,17 @@ Hvis den ikke er registreret, vil deployment fejle, og du vil få en fejlbesked.
 
 ## 🚀 Sådan sætter du løsningen op
 
-1️⃣ Klik på knappen herunder for at starte deployment i Azure:
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FjtlAtlytix%2Ffabric-auto-pause-deploy%2Fmain%2Ffabric-auto-pause.json)
+### 1️⃣ Kør Precheck (validerer om din Azure subscription er klar)
+[![Deploy Pre-Check to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FjtlAtlytix%2Ffabric-auto-pause-deploy%2Fmain%2Ffabric-precheck.json)
 
 ---
 
-2️⃣ I Azure deployment-formularen:
+### 2️⃣ Når Precheck er OK → Kør Auto-Pause deployment
+[![Deploy Auto-Pause to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FjtlAtlytix%2Ffabric-auto-pause-deploy%2Fmain%2Ffabric-auto-pause.json)
+
+---
+
+### 3️⃣ Udfyld i Azure deployment-formularen:
 - **Resource Group** – vælg eksisterende eller opret en ny
 - **Fabric Capacity Name** – navnet på din Fabric kapacitet (f.eks. `virksomhedensfabric`)
 - **Admin Email** – den e-mail som skal modtage notifikationer hvis pause fejler
@@ -51,7 +56,7 @@ Hvis den ikke er registreret, vil deployment fejle, og du vil få en fejlbesked.
 
 ---
 
-3️⃣ Klik **Review + create** og derefter **Create**
+### 4️⃣ Klik **Review + create** og derefter **Create**
 
 ---
 
@@ -59,16 +64,14 @@ Hvis den ikke er registreret, vil deployment fejle, og du vil få en fejlbesked.
 
 En **Azure administrator** (med Owner eller Contributor på subscription) skal gøre følgende:
 
-### I Azure Portal:
+#### I Azure Portal:
 - Gå til **Subscriptions > [din subscription] > Resource providers**
 - Søg: `Microsoft.Logic`
 - Klik: `Register`
 
-### Eller via CLI:
+#### Eller via CLI:
 ```bash
 az provider register --namespace Microsoft.Logic
-```
-
 Dette skal kun gøres én gang pr. subscription.
 
 💡 Hvad sker der efter deployment?
