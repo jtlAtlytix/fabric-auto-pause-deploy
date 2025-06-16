@@ -72,6 +72,8 @@ En **Azure administrator** (med Owner eller Contributor på subscription) skal g
 #### Eller via CLI:
 ```bash
 az provider register --namespace Microsoft.Logic
+```
+
 Dette skal kun gøres én gang pr. subscription.
 
 💡 Hvad sker der efter deployment?
