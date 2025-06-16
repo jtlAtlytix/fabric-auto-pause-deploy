@@ -42,7 +42,7 @@ Hvis den ikke er registreret, vil deployment fejle, og du vil få en fejlbesked.
 
 2️⃣ I Azure deployment-formularen:
 - **Resource Group** – vælg eksisterende eller opret en ny
-- **Fabric Capacity Name** – navnet på din Fabric kapacitet (f.eks. `atlytixfabric`)
+- **Fabric Capacity Name** – navnet på din Fabric kapacitet (f.eks. `virksomhedensfabric`)
 - **Admin Email** – den e-mail som skal modtage notifikationer hvis pause fejler
 - **Notification Type** – vælg `email`, `teams`, `both` eller `none`
 - **Pause Time** – hvornår kapaciteten skal pauses (default er `17:00`, UTC)
