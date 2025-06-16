@@ -1,0 +1,161 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fabricCapacityName": {
+      "type": "string",
+      "metadata": {
+        "description": "Navnet på Microsoft Fabric kapaciteten der skal pauses/resumes"
+      }
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Navnet på resource group hvor kapaciteten ligger"
+      }
+    },
+    "pauseTime": {
+      "type": "string",
+      "defaultValue": "17:00",
+      "metadata": {
+        "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format)"
+      }
+    },
+    "resumeTime": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Tidspunkt for auto-resume (valgfrit, UTC HH:mm format)"
+      }
+    },
+    "adminEmail": {
+      "type": "string",
+      "metadata": {
+        "description": "E-mail som skal modtage notifikationer"
+      }
+    },
+    "notificationType": {
+      "type": "string",
+      "defaultValue": "email",
+      "allowedValues": [
+        "email",
+        "teams",
+        "both",
+        "none"
+      ],
+      "metadata": {
+        "description": "Hvordan skal notifikationer sendes? Vælg mellem: email, teams, both, none"
+      }
+    },
+    "teamId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "ID på Teams-team som skal modtage notifikation (hvis valgt)"
+      }
+    },
+    "userId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "User ID eller e-mail til Teams notifikation"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "fabricAutoPauseWorkflow",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
+            "Pause_Fabric": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/suspend?api-version=2022-07-01-preview')]",
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              },
+              "runAfter": {}
+            },
+            "Notify_Email": {
+              "runAfter": {
+                "Pause_Fabric": [
+                  "Failed"
+                ]
+              },
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['office365']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "/v2/Mail",
+                "body": {
+                  "To": "[parameters('adminEmail')]",
+                  "Subject": "Fabric auto-pause fejlede",
+                  "Body": "Der opstod en fejl under forsøg på at pause Fabric kapacitet."
+                }
+              },
+              "condition": "[or(equals(parameters('notificationType'), 'email'), equals(parameters('notificationType'), 'both'))]"
+            },
+            "Notify_Teams": {
+              "runAfter": {
+                "Pause_Fabric": [
+                  "Failed"
+                ]
+              },
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['teams']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "[concat('/v1.0/teams/', parameters('teamId'), '/sendActivityNotification')]",
+                "body": {
+                  "topic": {
+                    "source": "text",
+                    "value": "Fabric Pause Fejl"
+                  },
+                  "activityType": "userMention",
+                  "previewText": {
+                    "content": "Fejl ved auto-pause"
+                  },
+                  "templateParameters": [],
+                  "recipient": {
+                    "userId": "[parameters('userId')]"
+                  }
+                }
+              },
+              "condition": "[or(equals(parameters('notificationType'), 'teams'), equals(parameters('notificationType'), 'both'))]"
+            }
+          },
+          "triggers": {
+            "Recurrence": {
+              "type": "Recurrence",
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "startTime": "[concat('2024-01-01T', parameters('pauseTime'), ':00Z')]"
+              }
+            }
+          }
+        },
+        "parameters": {
+          "$connections": {
+            "value": "[parameters('$connections')]"
+          }
+        }
+      }
+    }
+  ]
+}
