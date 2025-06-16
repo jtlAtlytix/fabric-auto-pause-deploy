@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Navnet på Resource Group der skal bruges til pre-check (hvor kapacitet ligger)"
+      }
+    },
+    "fabricCapacityName": {
+      "type": "string",
+      "metadata": {
+        "description": "Navnet på Microsoft Fabric kapaciteten"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "fabricPreCheckLogicApp",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
+            "Check_MicrosoftLogic": {
+              "type": "Http",
+              "inputs": {
+                "method": "GET",
+                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Logic?api-version=2016-06-01')]",
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              }
+            },
+            "Check_FabricAccess": {
+              "type": "Http",
+              "inputs": {
+                "method": "GET",
+                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '?api-version=2022-07-01-preview')]",
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              },
+              "runAfter": {
+                "Check_MicrosoftLogic": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "Compose_Result": {
+              "type": "Compose",
+              "inputs": {
+                "checkMicrosoftLogic": "@if(equals(body('Check_MicrosoftLogic')?['id'], null), 'Not Registered', 'Registered')",
+                "fabricAccess": "@if(equals(body('Check_FabricAccess')?['id'], null), 'No Access', 'OK')",
+                "recommendation": "@if(and(equals(body('Check_MicrosoftLogic')?['id'], null), equals(body('Check_FabricAccess')?['id'], null)), 'Læs README for registrering af Microsoft.Logic og tildel rettigheder.', 'Alt ser godt ud – du kan fortsætte med deployment!')"
+              },
+              "runAfter": {
+                "Check_FabricAccess": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              }
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Button",
+              "inputs": {}
+            }
+          },
+          "outputs": {}
+        }
+      }
+    }
+  ]
+}
