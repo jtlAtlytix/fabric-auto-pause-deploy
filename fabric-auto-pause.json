@@ -33,7 +33,7 @@
     {
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2019-05-01",
-      "name": "fabricAutoPauseWorkflow",
+      "name": "fabricAutoPauseByAtlytix",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
