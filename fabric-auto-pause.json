@@ -20,6 +20,13 @@
       "metadata": {
         "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format)"
       }
+    },
+    "resumeTime": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Tidspunkt for auto-resume (valgfrit, UTC HH:mm format)"
+      }
     }
   },
   "resources": [
@@ -28,6 +35,9 @@
       "apiVersion": "2019-05-01",
       "name": "fabricAutoPauseWorkflow",
       "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "definition": {
           "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
@@ -37,8 +47,8 @@
               "inputs": {
                 "method": "POST",
                 "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/suspend?api-version=2022-07-01-preview')]",
-                "headers": {
-                  "Content-Type": "application/json"
+                "authentication": {
+                  "type": "ManagedServiceIdentity"
                 }
               },
               "runAfter": {}
