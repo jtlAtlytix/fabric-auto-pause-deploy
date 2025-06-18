@@ -42,6 +42,9 @@
                 "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/suspend?api-version=2022-07-01-preview')]",
                 "headers": {
                   "Content-Type": "application/json"
+                },
+                "authentication": {
+                  "type": "ManagedServiceIdentity"
                 }
               }
             }
