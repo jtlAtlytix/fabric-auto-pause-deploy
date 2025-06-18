@@ -5,7 +5,7 @@
 🌐 [www.atlytix.dk](https://www.atlytix.dk)  
 📧 [jtl@atlytix.dk](mailto:jtl@atlytix.dk)
 
-👉 [Download komplet deployment guide som PDF](https://github.com/jtlAtlytix/fabric-auto-pause-deploy/raw/main/AutoPauseGuide.pdf)
+## 👉 [Download komplet deployment guide som PDF](https://github.com/jtlAtlytix/fabric-auto-pause-deploy/raw/main/AutoPauseGuide.pdf)
 
 ---
 
