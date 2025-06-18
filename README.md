@@ -105,3 +105,30 @@ Vælge dagligt pause kl. 17:00
 Sætte Resume kl. 07:00 (valgfrit)
 
 Deploye på få minutter — ingen yderligere kode
+
+## 🛡 Hvordan giver man Logic App rettigheder til at pause Fabric?
+
+Hvis du har brugt **User-versionen**, skal en administrator give Logic App Managed Identity de nødvendige rettigheder til at kunne pause (og evt. resume) Fabric kapaciteten.
+
+### Sådan gør du i Azure Portal:
+
+1️⃣ Gå til **Resource groups > [din resource group] > Logic Apps > [din Logic App]**  
+2️⃣ Under **Identity**, find Managed Identity objekt-ID (Principal ID) — noter det (eller kopier)  
+
+3️⃣ Gå til **Fabric kapacitetens ressource** i Azure Portal  
+4️⃣ Vælg **Access control (IAM)**  
+5️⃣ Klik på **Add > Add role assignment**  
+6️⃣ Vælg:
+- **Role:** Contributor *(eller en rolle der har rettighed til at suspend/resume Fabric kapacitet — fx en custom rolle, hvis I vil begrænse rettighederne)*
+- **Assign access to:** Managed identity  
+- Vælg din Logic App Managed Identity  
+
+7️⃣ Klik **Save**  
+
+✅ Nu har Logic App'en tilladelse til at kalde Fabric API'et og pause/resume kapaciteten.
+
+---
+
+💡 **Bemærk:**  
+Hvis du har deployet **Admin-versionen**, forsøger ARM automatisk at give Logic App Managed Identity Contributor-rolle på Fabric kapaciteten.  
+Hvis det fejler (pga. manglende rettigheder på din bruger), skal ovenstående IAM-opsætning gøres manuelt.
