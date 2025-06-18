@@ -64,3 +64,40 @@ En Azure administrator skal registrere provideren:
 ### Eller via CLI  
 ```bash
 az provider register --namespace Microsoft.Logic
+```
+
+💡 Hvad sker der efter deployment?
+✅ Logic App fabricAutoPauseByAtlytix bliver oprettet
+✅ Dagligt pause/resume kører automatisk
+✅ Du kan se og ændre Logic App’en i Azure Portal
+
+🛡 Sådan giver du Logic App rettigheder til at pause kapaciteten
+Hvis du har brugt User-versionen, skal en admin tildele adgang manuelt:
+
+1️⃣ Aktivér Logic App's Managed Identity
+Gå til Resource groups > [din resource group] > Logic Apps > [din Logic App]
+
+Vælg Identity > skift System assigned til On > klik Save
+
+2️⃣ Giv Managed Identity adgang
+Gå til Fabric kapacitetens ressource > Access control (IAM)
+
+Klik Add > Add role assignment
+
+Vælg Role: Contributor
+
+Assign access to: Managed identity
+
+Vælg din Logic App > Save
+
+✅ Logic App’en har nu de nødvendige rettigheder.
+
+💸 Omkostninger
+ARM template + deployment = gratis
+Logic App faktureres pr. kald (typisk meget lavt, øre pr. måned)
+
+📬 Support
+Har du spørgsmål?
+📧 jtl@atlytix.dk
+
+
