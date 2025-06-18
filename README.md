@@ -2,16 +2,6 @@
 
 ![Atlytix Logo](https://raw.githubusercontent.com/jtlAtlytix/fabric-auto-pause-deploy/main/5.png)
 
-
-🌐 [www.atlytix.dk](https://www.atlytix.dk)  
-📧 [jtl@atlytix.dk](mailto:jtl@atlytix.dk)
-
----
-
-# 🚀 Fabric Auto-Pause / Resume Solution - Udviklet af Atlytix
-
-![Atlytix Logo](https://raw.githubusercontent.com/jtlAtlytix/fabric-auto-pause-deploy/main/5.png)
-
 🌐 [www.atlytix.dk](https://www.atlytix.dk)  
 📧 [jtl@atlytix.dk](mailto:jtl@atlytix.dk)
 
