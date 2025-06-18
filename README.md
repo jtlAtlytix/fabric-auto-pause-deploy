@@ -67,6 +67,7 @@ az provider register --namespace Microsoft.Logic
 ```
 
 💡 Hvad sker der efter deployment?
+
 ✅ Logic App fabricAutoPauseByAtlytix bliver oprettet
 ✅ Dagligt pause/resume kører automatisk
 ✅ Du kan se og ændre Logic App’en i Azure Portal
