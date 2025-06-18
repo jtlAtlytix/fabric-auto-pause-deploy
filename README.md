@@ -75,7 +75,7 @@ az provider register --namespace Microsoft.Logic
 ✅ Du kan se og ændre Logic App’en i Azure Portal. 
 
 
-##🛡 Sådan giver du Logic App rettigheder til at pause kapaciteten
+## **🛡 Sådan giver du Logic App rettigheder til at pause kapaciteten**
 Hvis du har brugt User-versionen, skal en admin tildele adgang manuelt:
 
 1️⃣ Aktivér Logic App's Managed Identity
