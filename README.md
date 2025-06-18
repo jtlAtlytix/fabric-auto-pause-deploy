@@ -110,25 +110,26 @@ Deploye på få minutter — ingen yderligere kode
 
 Hvis du har brugt **User-versionen**, skal en administrator give Logic App Managed Identity de nødvendige rettigheder til at kunne pause (og evt. resume) Fabric kapaciteten.
 
-### Sådan gør du i Azure Portal:
+### 1️⃣ Aktivér Logic App's Managed Identity
+- Gå til **Resource groups > [din resource group] > Logic Apps > [din Logic App]**
+- I menuen til venstre: vælg **Identity**
+- Under **System assigned**, skift slider fra **Off** til **On**
+- Klik **Save**
+- Vent et øjeblik – nu bliver der oprettet et **Principal ID**
 
-1️⃣ Gå til **Resource groups > [din resource group] > Logic Apps > [din Logic App]**  
-2️⃣ Under **Identity**, find Managed Identity objekt-ID (Principal ID) — noter det (eller kopier)  
+### 2️⃣ Giv Managed Identity adgang til Fabric kapacitet
+- Gå til **Fabric kapacitetens ressource**
+- Vælg **Access control (IAM)** > **Add > Add role assignment**
+- Vælg:
+  - **Role:** Contributor *(eller custom rolle med de nødvendige rettigheder til Fabric suspend/resume)*
+  - **Assign access to:** Managed identity
+  - Vælg Logic App’en
 
-3️⃣ Gå til **Fabric kapacitetens ressource** i Azure Portal  
-4️⃣ Vælg **Access control (IAM)**  
-5️⃣ Klik på **Add > Add role assignment**  
-6️⃣ Vælg:
-- **Role:** Contributor *(eller en rolle der har rettighed til at suspend/resume Fabric kapacitet — fx en custom rolle, hvis I vil begrænse rettighederne)*
-- **Assign access to:** Managed identity  
-- Vælg din Logic App Managed Identity  
+- Klik **Save**
 
-7️⃣ Klik **Save**  
-
-✅ Nu har Logic App'en tilladelse til at kalde Fabric API'et og pause/resume kapaciteten.
+✅ Nu har Logic App'en de nødvendige rettigheder.
 
 ---
 
-💡 **Bemærk:**  
-Hvis du har deployet **Admin-versionen**, forsøger ARM automatisk at give Logic App Managed Identity Contributor-rolle på Fabric kapaciteten.  
-Hvis det fejler (pga. manglende rettigheder på din bruger), skal ovenstående IAM-opsætning gøres manuelt.
+💡 **Tip:**  
+Hvis du deployer med **Admin-versionen**, forsøger ARM automatisk at tildele rollen. Hvis det fejler, brug ovenstående guide.
