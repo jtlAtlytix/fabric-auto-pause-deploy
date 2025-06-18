@@ -47,8 +47,8 @@
               "inputs": {
                 "method": "POST",
                 "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/suspend?api-version=2022-07-01-preview')]",
-                "authentication": {
-                  "type": "ManagedServiceIdentity"
+                "headers": {
+                  "Content-Type": "application/json"
                 }
               },
               "runAfter": {}
@@ -66,6 +66,19 @@
           }
         }
       }
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceGroup().id, 'fabricAutoPauseWorkflow', 'Contributor')]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",  // Contributor role ID
+        "principalId": "[reference(resourceId('Microsoft.Logic/workflows', 'fabricAutoPauseWorkflow'), '2019-05-01', 'Full').identity.principalId']",
+        "scope": "[concat(subscription().id, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Logic/workflows', 'fabricAutoPauseWorkflow')]"
+      ]
     }
   ]
 }
