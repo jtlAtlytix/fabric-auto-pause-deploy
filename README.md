@@ -1,74 +1,71 @@
-# 🚀 Fabric Auto-Pause Solution
+# 🚀 Fabric Auto-Pause Solution  
 
 Denne løsning hjælper dig med automatisk at **pause din Microsoft Fabric kapacitet** på et valgt tidspunkt hver dag.  
-Den er designet til at være enkel at bruge og sikker at implementere — uden at du behøver at skrive kode.
+Den er designet til at være enkel at bruge og sikker at implementere — uden at du behøver at skrive kode.  
 
 ---
 
-## ⚙ Hvad løsningen gør
+## ⚙ Hvad løsningen gør  
 ✅ Opretter en **Azure Logic App** i din Azure subscription  
 ✅ Logic App kører dagligt på det tidspunkt du vælger (f.eks. 17:00 UTC)  
 ✅ Logic App sender et API-kald til Microsoft Fabric for at pause kapaciteten  
-✅ Hvis der opstår en fejl under pause, kan appen:
-- Sende en e-mail notifikation
-- Sende en Teams notifikation
-- Sende begge dele
-- Eller undlade notifikationer (du vælger)
-
-✅ (Valgfrit) Logic App kan også opsættes til at genoptage (resume) kapaciteten på et andet tidspunkt
+✅ (Valgfrit) Logic App kan også opsættes til at genoptage (resume) kapaciteten på et andet tidspunkt  
 
 ---
 
-## 📌 Krav
-For at bruge løsningen skal du have:
-- En **aktiv Azure subscription**
-- En **resource group** (du kan oprette ny under deployment, hvis du ikke har en)
-- En **Microsoft Fabric kapacitet**, som du ønsker at pause (du skal kende kapacitetens navn)
+## 📌 Krav  
+For at bruge løsningen skal du have:  
+- En **aktiv Azure subscription**  
+- En **resource group** (du kan oprette en ny under deployment, hvis du ikke har en)  
+- En **Microsoft Fabric kapacitet**, som du ønsker at pause (du skal kende kapacitetens navn)  
 
 💡 **OBS:**  
 Din Azure subscription skal have ressource provideren **Microsoft.Logic** registreret (det er den der tillader Logic Apps).  
-Hvis den ikke er registreret, vil deployment fejle, og du vil få en fejlbesked.  
-👉 Se nedenfor hvordan du får den registreret.
+👉 Se nedenfor hvordan du får den registreret.  
 
 ---
 
-## 🚀 Sådan sætter du løsningen op
+## 🚀 Vælg din version af løsningen  
 
-1️⃣ Klik på knappen herunder for at starte deployment i Azure:
+Du kan vælge mellem:  
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FjtlAtlytix%2Ffabric-auto-pause-deploy%2Fmain%2Ffabric-auto-pause.json)
+### ✅ **Admin-version (med IAM-forsøg)**  
+Denne version forsøger automatisk at give Logic App nødvendige rettigheder i Azure IAM.  
+👉 Kræver, at brugeren der deployer har rettigheder til at oprette rolle-tildelinger (fx Owner på subscription).  
 
----
-
-2️⃣ I Azure deployment-formularen:
-- **Resource Group** – vælg eksisterende eller opret en ny
-- **Fabric Capacity Name** – navnet på din Fabric kapacitet (f.eks. `virksomhedensfabric`)
-- **Admin Email** – den e-mail som skal modtage notifikationer hvis pause fejler
-- **Notification Type** – vælg `email`, `teams`, `both` eller `none`
-- **Pause Time** – hvornår kapaciteten skal pauses (default er `17:00`, UTC)
-- **Resume Time** – hvornår kapaciteten evt. skal genoptages (valgfrit, UTC)
-- **Team ID** + **User ID** – kun hvis du vælger Teams notifikationer
+[![Deploy Admin Version](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FjtlAtlytix%2Ffabric-auto-pause-deploy%2Fmain%2Ffabric-auto-pause.json)  
 
 ---
 
-3️⃣ Klik **Review + create** og derefter **Create**
+### ✅ **User-version (uden IAM-forsøg)**  
+Denne version opretter kun Logic App.  
+En administrator skal efterfølgende give Logic App Managed Identity adgang til at pause kapaciteten.  
+
+[![Deploy User Version](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FjtlAtlytix%2Ffabric-auto-pause-deploy%2Fmain%2Ffabric-auto-pause-user.json)  
 
 ---
 
-## ⚠ Hvis Logic App deployment fejler (Microsoft.Logic ikke registreret)
+## 📝 Når du deployer  
+- **Resource Group** – vælg eksisterende eller opret en ny  
+- **Fabric Capacity Name** – navnet på din Fabric kapacitet (f.eks. `virksomhedensfabric`)  
+- **Pause Time** – hvornår kapaciteten skal pauses (default er `17:00`, UTC)  
+- **Resume Time** – hvornår kapaciteten evt. skal genoptages (valgfrit, UTC)  
 
-En **Azure administrator** (med Owner eller Contributor på subscription) skal gøre følgende:
+---
 
-#### I Azure Portal:
-- Gå til **Subscriptions > [din subscription] > Resource providers**
-- Søg: `Microsoft.Logic`
-- Klik: `Register`
+## ⚠ Hvis Logic App deployment fejler (Microsoft.Logic ikke registreret)  
 
-#### Eller via CLI:
+En **Azure administrator** (med Owner eller Contributor på subscription) skal gøre følgende:  
+
+### I Azure Portal:  
+- Gå til **Subscriptions > [din subscription] > Resource providers**  
+- Søg: `Microsoft.Logic`  
+- Klik: `Register`  
+
+### Eller via CLI:  
 ```bash
 az provider register --namespace Microsoft.Logic
 ```
-
 Dette skal kun gøres én gang pr. subscription.
 
 💡 Hvad sker der efter deployment?
@@ -76,7 +73,7 @@ Azure opretter en Logic App i den valgte Resource Group
 
 Logic App kører dagligt på det tidspunkt du valgte
 
-Hvis pause fejler, sender den notifikationer som valgt
+Logic App forsøger at pause kapaciteten (og resume hvis valgt)
 
 Du kan se Logic App’en i Azure Portal under Logic Apps
 
@@ -98,7 +95,6 @@ Logic App faktureres på forbrug — typisk ekstremt lavt (øre pr. måned ved 1
 Har du spørgsmål, eller brug for hjælp til opsætning?
 
 👉 Kontakt vores support
-Send en mail via din kontaktformular eller direkte til:
 📧 jtl@atlytix.dk
 
 ✅ Eksempel på brugsscenarie
@@ -108,6 +104,4 @@ Vælge dagligt pause kl. 17:00
 
 Sætte Resume kl. 07:00 (valgfrit)
 
-Modtage mail hvis pause fejler
-
-Alt konfigureres ved deploy — ingen yderligere kode
+Deploye på få minutter — ingen yderligere kode
