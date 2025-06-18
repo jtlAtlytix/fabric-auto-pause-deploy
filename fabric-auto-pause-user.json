@@ -20,6 +20,13 @@
       "metadata": {
         "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format)"
       }
+    },
+    "resumeTime": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Valgfrit: Tidspunkt for daglig auto-resume (UTC HH:mm format)"
+      }
     }
   },
   "resources": [
@@ -46,17 +53,41 @@
                 "authentication": {
                   "type": "ManagedServiceIdentity"
                 }
-              }
+              },
+              "runAfter": {}
+            },
+            "Resume_Fabric": {
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/resume?api-version=2022-07-01-preview')]",
+                "headers": {
+                  "Content-Type": "application/json"
+                },
+                "authentication": {
+                  "type": "ManagedServiceIdentity"
+                }
+              },
+              "runAfter": {}
             }
           },
           "triggers": {
-            "Recurrence": {
+            "Pause_Recurrence": {
               "type": "Recurrence",
               "recurrence": {
                 "frequency": "Day",
                 "interval": 1,
                 "startTime": "[concat('2024-01-01T', parameters('pauseTime'), ':00Z')]"
               }
+            },
+            "Resume_Recurrence": {
+              "type": "Recurrence",
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "startTime": "[if(equals(parameters('resumeTime'), ''), json('null'), concat('2024-01-01T', parameters('resumeTime'), ':00Z'))]"
+              },
+              "enabled": "[not(equals(parameters('resumeTime'), ''))]"
             }
           }
         }
