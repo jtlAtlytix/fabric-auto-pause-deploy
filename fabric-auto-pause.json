@@ -5,7 +5,7 @@
     "fabricCapacityName": {
       "type": "string",
       "metadata": {
-        "description": "Navnet på Microsoft Fabric kapaciteten der skal pauses/resumes"
+        "description": "Navnet på Microsoft Fabric kapaciteten der skal pauses"
       }
     },
     "resourceGroupName": {
@@ -19,20 +19,6 @@
       "defaultValue": "17:00",
       "metadata": {
         "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format)"
-      }
-    },
-    "resumeTime": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Tidspunkt for auto-resume (valgfrit, UTC HH:mm format)"
-      }
-    },
-    "apiVersionFabric": {
-      "type": "string",
-      "defaultValue": "2022-07-01-preview",
-      "metadata": {
-        "description": "API version for Microsoft Fabric (standard: 2022-07-01-preview)"
       }
     }
   },
@@ -50,28 +36,16 @@
               "type": "Http",
               "inputs": {
                 "method": "POST",
-                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/suspend?api-version=', parameters('apiVersionFabric'))]",
+                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/suspend?api-version=2022-07-01-preview')]",
                 "headers": {
                   "Content-Type": "application/json"
                 }
               },
               "runAfter": {}
-            },
-            "Resume_Fabric": {
-              "type": "Http",
-              "inputs": {
-                "method": "POST",
-                "uri": "[concat('https://management.azure.com/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'), '/resume?api-version=', parameters('apiVersionFabric'))]",
-                "headers": {
-                  "Content-Type": "application/json"
-                }
-              },
-              "runAfter": {},
-              "condition": "[not(empty(parameters('resumeTime')))]"
             }
           },
           "triggers": {
-            "Pause_Trigger": {
+            "Recurrence": {
               "type": "Recurrence",
               "recurrence": {
                 "frequency": "Day",
