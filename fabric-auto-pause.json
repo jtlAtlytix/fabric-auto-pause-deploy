@@ -64,7 +64,39 @@
                 }
               },
               "runAfter": {}
-            },
+            }
+          },
+          "triggers": {
+            "Pause_Recurrence": {
+              "type": "Recurrence",
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "startTime": "[concat('2024-01-01T', parameters('pauseTime'), ':00Z')]"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "[not(equals(parameters('resumeTime'), ''))]",
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "fabricAutoResumeByAtlytix",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "tags": {
+        "DevelopedBy": "Atlytix",
+        "Website": "https://www.atlytix.dk",
+        "Contact": "support@atlytix.dk"
+      },
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
             "Resume_Fabric": {
               "type": "Http",
               "inputs": {
@@ -81,22 +113,13 @@
             }
           },
           "triggers": {
-            "Pause_Recurrence": {
-              "type": "Recurrence",
-              "recurrence": {
-                "frequency": "Day",
-                "interval": 1,
-                "startTime": "[concat('2024-01-01T', parameters('pauseTime'), ':00Z')]"
-              }
-            },
             "Resume_Recurrence": {
               "type": "Recurrence",
               "recurrence": {
                 "frequency": "Day",
                 "interval": 1,
-                "startTime": "[if(equals(parameters('resumeTime'), ''), json('null'), concat('2024-01-01T', parameters('resumeTime'), ':00Z'))]"
-              },
-              "enabled": "[not(equals(parameters('resumeTime'), ''))]"
+                "startTime": "[concat('2024-01-01T', parameters('resumeTime'), ':00Z')]"
+              }
             }
           }
         }
