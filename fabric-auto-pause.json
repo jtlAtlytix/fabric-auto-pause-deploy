@@ -20,13 +20,6 @@
       "metadata": {
         "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format)"
       }
-    },
-    "resumeTime": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Tidspunkt for auto-resume (valgfrit, UTC HH:mm format)"
-      }
     }
   },
   "resources": [
@@ -50,8 +43,7 @@
                 "headers": {
                   "Content-Type": "application/json"
                 }
-              },
-              "runAfter": {}
+              }
             }
           },
           "triggers": {
@@ -72,8 +64,8 @@
       "apiVersion": "2020-04-01-preview",
       "name": "[guid(resourceGroup().id, 'fabricAutoPauseWorkflow', 'Contributor')]",
       "properties": {
-        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",  // Contributor role ID
-        "principalId": "[reference(resourceId('Microsoft.Logic/workflows', 'fabricAutoPauseWorkflow'), '2019-05-01', 'Full').identity.principalId']",
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "principalId": "[reference(resourceId('Microsoft.Logic/workflows', 'fabricAutoPauseWorkflow'), '2019-05-01', 'Full').identity.principalId]",
         "scope": "[concat(subscription().id, '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.Fabric/capacities/', parameters('fabricCapacityName'))]"
       },
       "dependsOn": [
