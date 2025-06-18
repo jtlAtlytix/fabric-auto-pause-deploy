@@ -1,6 +1,7 @@
 # 🚀 Fabric Auto-Pause / Resume Solution - Udviklet af Atlytix
 
-![Atlytix Logo]([[https://www.atlytix.dk/path-to-your-logo.png](https://www.google.com/url?sa=i&url=https%3A%2F%2Fatlytix.dk%2Fevent2024%2F&psig=AOvVaw33K2sgMiReE09iMQlHft9M&ust=1750334665687000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJjb8_H2-o0DFQAAAAAdAAAAABAE](https://github.com/jtlAtlytix/fabric-auto-pause-deploy/blob/main/5.png)))
+![Atlytix Logo](https://raw.githubusercontent.com/jtlAtlytix/fabric-auto-pause-deploy/main/5.png)
+
 
 🌐 [www.atlytix.dk](https://www.atlytix.dk)  
 📧 [jtl@atlytix.dk](mailto:jtl@atlytix.dk)
