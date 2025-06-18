@@ -8,6 +8,26 @@
 
 ---
 
+# 🚀 Fabric Auto-Pause / Resume Solution - Udviklet af Atlytix
+
+![Atlytix Logo](https://raw.githubusercontent.com/jtlAtlytix/fabric-auto-pause-deploy/main/5.png)
+
+🌐 [www.atlytix.dk](https://www.atlytix.dk)  
+📧 [jtl@atlytix.dk](mailto:jtl@atlytix.dk)
+
+👉 [Download komplet deployment guide som PDF](https://github.com/jtlAtlytix/fabric-auto-pause-deploy/raw/main/AutoPauseGuide.pdf)
+
+---
+
+## ⚙ Hvad løsningen gør  
+✅ Opretter en **Azure Logic App** i din Azure subscription  
+✅ Logic App kører dagligt på det tidspunkt du vælger (f.eks. 17:00 UTC)  
+✅ Logic App sender et API-kald til Microsoft Fabric for at pause kapaciteten  
+✅ (Valgfrit) Logic App kan også opsættes til at genoptage (resume) kapaciteten på et andet tidspunkt  
+
+---
+
+
 ## ⚙ Hvad løsningen gør  
 ✅ Opretter en **Azure Logic App** i din Azure subscription  
 ✅ Logic App kører dagligt på det tidspunkt du vælger (f.eks. 17:00 UTC)  
