@@ -1,31 +1,35 @@
 {
+  // --------------------------------------------
+  // 🚀 Udviklet af Atlytix – www.atlytix.dk
+  // Kontakt: support@atlytix.dk
+  // --------------------------------------------
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "fabricCapacityName": {
       "type": "string",
       "metadata": {
-        "description": "Navnet på Microsoft Fabric kapaciteten der skal pauses"
+        "description": "Navnet på Microsoft Fabric kapaciteten der skal pauses – Udviklet af Atlytix (www.atlytix.dk)"
       }
     },
     "resourceGroupName": {
       "type": "string",
       "metadata": {
-        "description": "Navnet på resource group hvor kapaciteten ligger"
+        "description": "Navnet på resource group hvor kapaciteten ligger – Udviklet af Atlytix (www.atlytix.dk)"
       }
     },
     "pauseTime": {
       "type": "string",
       "defaultValue": "17:00",
       "metadata": {
-        "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format)"
+        "description": "Tidspunkt for daglig auto-pause (UTC HH:mm format) – Udviklet af Atlytix (www.atlytix.dk)"
       }
     },
     "resumeTime": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Valgfrit: Tidspunkt for daglig auto-resume (UTC HH:mm format)"
+        "description": "Valgfrit: Tidspunkt for daglig auto-resume (UTC HH:mm format) – Udviklet af Atlytix (www.atlytix.dk)"
       }
     }
   },
@@ -37,6 +41,11 @@
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
+      },
+      "tags": {
+        "DevelopedBy": "Atlytix",
+        "Website": "https://www.atlytix.dk",
+        "Contact": "support@atlytix.dk"
       },
       "properties": {
         "definition": {
